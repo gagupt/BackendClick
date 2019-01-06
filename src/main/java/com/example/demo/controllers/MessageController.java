@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,31 +15,36 @@ import com.example.demo.services.MessageService;
 
 @RestController
 public class MessageController {
-	private final MessageService messageService;
+  private final MessageService messageService;
 
-	@Autowired
-	public MessageController(MessageService messageService) {
-		this.messageService = messageService;
-	}
+  @Autowired
+  public MessageController(MessageService messageService) {
+    this.messageService = messageService;
+  }
 
-	@RequestMapping(value = "createMessage", method = RequestMethod.POST)
-	public boolean createMessage(@RequestBody MessageObj messageObj) {
-		return messageService.createMessage(messageObj);
-	}
+  @RequestMapping(value = "createMessage", method = RequestMethod.POST)
+  public boolean createMessage(@RequestBody MessageObj messageObj) {
+    return messageService.createMessage(messageObj);
+  }
 
-	@RequestMapping(value = "getMessage", method = RequestMethod.GET)
-	public @ResponseBody MessageObj getMessage(@RequestParam(value = "messageId") String messageId) {
-		return messageService.getMessage(messageId);
-	}
+  @RequestMapping(value = "getMessage", method = RequestMethod.GET)
+  public @ResponseBody MessageObj getMessage(@RequestParam(value = "messageId") String messageId) {
+    return messageService.getMessage(messageId);
+  }
 
-	@RequestMapping(value = "getLastHourMessages", method = RequestMethod.GET)
-	public @ResponseBody List<MessageObj> getLastHourMessages() {
-		return messageService.getLastHourMessages();
-	}
+  @RequestMapping(value = "getLastHourMessages", method = RequestMethod.GET)
+  public @ResponseBody List<MessageObj> getLastHourMessages() {
+    return messageService.getLastHourMessages();
+  }
 
-	@RequestMapping(value = "upload/image", method = RequestMethod.POST)
-	public @ResponseBody boolean uploadVideo(@RequestParam MultipartFile file) {
-		return messageService.uploadVideo(file);
+  @RequestMapping(value = "upload/image", method = RequestMethod.POST)
+  public boolean uploadVideo(@RequestParam MultipartFile file) {
+    return messageService.uploadVideo(file);
+  }
 
-	}
+  @RequestMapping(value = "download/image", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<String> listObjects() {
+    return messageService.listObjects();
+  }
 }

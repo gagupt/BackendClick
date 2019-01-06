@@ -3,14 +3,18 @@ package com.example.demo.services;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.IOUtils;
 import com.example.demo.data.MessageObj;
 import com.example.demo.repositories.MessageRepository;
@@ -44,32 +48,18 @@ public class MessageServiceImpl implements MessageService {
 
   @Override
   public boolean uploadVideo(MultipartFile file) {
-    List<Bucket> buckets = s3Client.listBuckets();
-    System.out.println("Your Amazon S3 buckets are:");
-    for (Bucket b : buckets) {
-      System.out.println("* " + b.getName());
-    }
     try {
-      System.out.println("reached here1");
       InputStream is = file.getInputStream();
-      System.out.println("reached here2");
       ObjectMetadata meta = new ObjectMetadata();
-      System.out.println("reached here3");
       byte[] bytes = IOUtils.toByteArray(is);
-      System.out.println("reached here4");
-
-      System.out.println("bytes" + bytes.toString());
 
       meta.setContentLength(bytes.length);
-      System.out.println("reached here5");
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-      System.out.println("reached here6");
 
-      String key = "image" + String.valueOf(System.currentTimeMillis());
+      String key = "image" + String.valueOf(System.currentTimeMillis()) + ".jpg";
       String bucket = "my-bucket-images";
       PutObjectRequest putObjectRequest =
           new PutObjectRequest(bucket, key, byteArrayInputStream, meta);
-      System.out.println("reached here7");
       putObjectRequest.setMetadata(meta);
       s3Client.putObject(putObjectRequest);
     } catch (IOException e1) {
@@ -79,4 +69,31 @@ public class MessageServiceImpl implements MessageService {
 
   }
 
+  @Override
+  public List<String> listObjects() {
+    // List<byte[]> listImages = new ArrayList<>();
+    String bucketName = "my-bucket-images";
+    List<String> urls = new ArrayList<>();
+    ListObjectsRequest listObjectsRequest =
+        new ListObjectsRequest().withBucketName(bucketName).withPrefix("image");
+    ObjectListing objectListing;
+    do {
+      objectListing = s3Client.listObjects(listObjectsRequest);
+
+      for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+        // System.out.println("object" + objectSummary.toString() + "=" + " - "
+        // + objectSummary.getKey() + " " + "(size = " + objectSummary.getSize() + ")");
+        URL url = s3Client.getUrl(bucketName, objectSummary.getKey());
+        urls.add(url.toString());
+
+        // System.out.println("count=" + count);
+        // count++;
+        // System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
+        // System.out.println("getObjectMetadata: " + fullObject.getObjectMetadata());
+        // System.out.println("Content: " + fullObject.getObjectContent());
+      }
+      // listObjectsRequest.setMarker(objectListing.getNextMarker());
+    } while (objectListing.isTruncated());
+    return urls;
+  }
 }
