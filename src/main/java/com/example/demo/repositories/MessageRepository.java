@@ -1,13 +1,13 @@
 package com.example.demo.repositories;
 
 import java.util.List;
-import com.example.demo.data.MessageObj;
+import com.example.demo.data.Keys;
 
 public interface MessageRepository {
 
-	boolean createMessage(MessageObj message);
+  boolean update(Keys keys);
 
-	MessageObj getMessage(String messageId);
+  List<String> getKeys(String id);
 
-	List<MessageObj> getLastHourMessages();
+  // List<Keys> getLastHourMessages();
 }
