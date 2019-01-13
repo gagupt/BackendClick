@@ -8,4 +8,6 @@ public interface MessageService {
   boolean uploadVideo(MultipartFile file);
 
   List<String> listObjects();
+
+  boolean deleteKeys(List<String> keys);
 }

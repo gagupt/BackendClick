@@ -88,4 +88,17 @@ public class MessageServiceImpl implements MessageService {
     // } while (objectListing.isTruncated());
     // return urls;
   }
+
+  @Override
+  public boolean deleteKeys(List<String> keys) {
+    List<String> oldkeys = messageRepo.getKeys(KEY_ID);
+    List<String> newKeys = new ArrayList<>();
+    for (String oldkey : oldkeys) {
+      if (!keys.contains(oldkey)) {
+        newKeys.add(oldkey);
+      }
+    }
+    return messageRepo.update(new Keys(KEY_ID, newKeys));
+
+  }
 }

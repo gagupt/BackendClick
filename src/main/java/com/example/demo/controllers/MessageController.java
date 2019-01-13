@@ -38,6 +38,11 @@ public class MessageController {
   public boolean uploadVideo(@RequestParam MultipartFile file) {
     return messageService.uploadVideo(file);
   }
+  
+  @RequestMapping(value = "delete/images", method = RequestMethod.POST)
+  public boolean deleteImage(@RequestParam List<String> keys) {
+    return messageService.deleteKeys(keys);
+  }
 
   @RequestMapping(value = "download/image", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
