@@ -3,7 +3,6 @@ package com.example.demo.controllers;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,7 +65,7 @@ public class MessageController {
   }
 
   @RequestMapping(value = "create/user", method = RequestMethod.POST)
-  public boolean createUser(@RequestBody User user) {
-    return messageService.createUser(user);
+  public boolean createUser(@RequestParam String mobileNo, String name) {
+    return messageService.createUser(mobileNo, name);
   }
 }

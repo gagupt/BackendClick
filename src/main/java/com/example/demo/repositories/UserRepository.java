@@ -5,5 +5,5 @@ import com.example.demo.data.User;
 public interface UserRepository {
   User getUser(String phoneNo);
 
-  boolean createUser(User user);
+  boolean createUser(String mobileNo, String name);
 }

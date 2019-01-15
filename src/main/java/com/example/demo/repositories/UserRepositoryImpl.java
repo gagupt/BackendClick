@@ -40,11 +40,11 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   @Override
-  public boolean createUser(User user) {
+  public boolean createUser(String mobileNo, String name) {
     boolean success = false;
     Table table = dynamoClient.getTable(TABLE_NAME);
     Item item = new Item();
-    item.withPrimaryKey(HASH_KEY_NAME, user.getMobileNo()).withString(NAME, user.getName());
+    item.withPrimaryKey(HASH_KEY_NAME, mobileNo).withString(NAME, name);
 
     PutItemOutcome outcome = table.putItem(item);
     int statusCode = outcome.getPutItemResult().getSdkHttpMetadata().getHttpStatusCode();

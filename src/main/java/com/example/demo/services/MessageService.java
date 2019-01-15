@@ -16,5 +16,5 @@ public interface MessageService {
 
   User getUser(String phoneNo);
 
-  boolean createUser(User user);
+  boolean createUser(String mobileNo, String name);
 }

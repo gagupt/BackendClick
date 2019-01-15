@@ -135,7 +135,7 @@ public class MessageServiceImpl implements MessageService {
   }
 
   @Override
-  public boolean createUser(User user) {
-    return userRepository.createUser(user);
+  public boolean createUser(String mobileNo, String name) {
+    return userRepository.createUser(mobileNo,name);
   }
 }
