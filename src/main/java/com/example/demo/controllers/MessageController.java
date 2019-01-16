@@ -51,7 +51,6 @@ public class MessageController {
     return messageService.listObjects();
   }
 
-
   @RequestMapping(value = "get/user/image", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public List<String> getUserImage(@RequestParam String phoneNo) {

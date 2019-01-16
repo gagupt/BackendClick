@@ -71,7 +71,7 @@ public class ImageRepositoryImpl implements ImageRepository {
       DeleteItemOutcome deleteItemOutcome =
           table.deleteItem(new PrimaryKey(HASH_KEY_NAME, key, RANGE_KEY_NAME, phoneNo));
       SdkHttpMetadata httpMetadata = deleteItemOutcome.getDeleteItemResult().getSdkHttpMetadata();
-      success = success && httpMetadata.getHttpStatusCode() == HttpStatus.SC_OK;
+      success = httpMetadata.getHttpStatusCode() == HttpStatus.SC_OK;
     }
     return success;
   }

@@ -103,7 +103,8 @@ public class MessageServiceImpl implements MessageService {
 
   @Override
   public boolean deleteKeys(List<String> keys, String phoneNo) {
-    boolean success = false;
+    boolean success1 = false;
+    boolean success2 = false;
     List<String> userKeys = imageRepository.getImages(phoneNo);
     List<String> keysToDelete = new ArrayList<>();
 
@@ -112,16 +113,33 @@ public class MessageServiceImpl implements MessageService {
         keysToDelete.add(key);
       }
     }
-    success = imageRepository.deleteImages(keysToDelete, phoneNo);
+    if (keysToDelete.size() > 0) {
+      success1 = imageRepository.deleteImages(keysToDelete, phoneNo);
+    }
 
     List<String> oldkeys = messageRepo.getKeys(KEY_ID);
     List<String> newKeys = new ArrayList<>();
+
+//    System.out.println("oldkeys=" + oldkeys.size());
+
     for (String oldkey : oldkeys) {
       if (!keysToDelete.contains(oldkey)) {
         newKeys.add(oldkey);
       }
     }
-    return success && messageRepo.update(new Keys(KEY_ID, newKeys));
+
+//    System.out.println("newKeys=" + newKeys.size());
+
+
+//    for (String kk : keysToDelete) {
+//      System.out.println("keysToDelete" + kk);
+//    }
+
+    success2 = messageRepo.update(new Keys(KEY_ID, newKeys));
+
+//    System.out.println("success1=" + success1);
+//    System.out.println("success2=" + success2);
+    return success1 && success2;
   }
 
   @Override
@@ -136,6 +154,6 @@ public class MessageServiceImpl implements MessageService {
 
   @Override
   public boolean createUser(String mobileNo, String name) {
-    return userRepository.createUser(mobileNo,name);
+    return userRepository.createUser(mobileNo, name);
   }
 }
